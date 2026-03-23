@@ -783,7 +783,8 @@ fn file_bytes(path: &str) -> Result<Vec<u8>> {
 pub fn start_server(settings: &Settings, shutdown_rx: MpscReceiver<()>) -> Result<(), Error> {
     trace!("Config: {:?}", settings);
     // do some config validation.
-    if !Path::new(&settings.database.data_directory).is_dir() {
+    // Only check for database directory if using sqlite (local database)
+    if settings.database.engine == "sqlite" && !Path::new(&settings.database.data_directory).is_dir() {
         error!("Database directory does not exist");
         return Err(Error::DatabaseDirError);
     }
