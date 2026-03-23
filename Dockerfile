@@ -4,6 +4,8 @@ WORKDIR /usr/src/app
 
 COPY . .
 
+RUN apt-get update && apt-get install -y protobuf-compiler && rm -rf /var/lib/apt/lists/*
+
 RUN cargo build --release
 
 FROM debian:bookworm-slim
