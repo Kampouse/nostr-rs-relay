@@ -230,6 +230,8 @@ impl Settings {
             .add_source(Config::try_from(default)?)
             // override with file contents
             .add_source(File::with_name(config))
+            // override with environment variables (DATABASE__CONNECTION, etc)
+            .add_source(config::Environment::default().separator("__"))
             .build()?;
         let mut settings: Settings = config.try_deserialize()?;
         // ensure connection pool size is logical

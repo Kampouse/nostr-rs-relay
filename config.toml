@@ -5,11 +5,13 @@ name = "nostr-rs-relay"
 description = "Nostr relay on Railway"
 
 [database]
-engine = "sqlite"
+engine = "libsql"
 data_directory = "/app/db"
 in_memory = false
 min_conn = 0
 max_conn = 8
+connection = ""
+connection_write = ""
 
 [network]
 address = "0.0.0.0"
