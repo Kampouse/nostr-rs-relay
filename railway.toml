@@ -2,7 +2,8 @@
 # Railway auto-detects Rust projects from Cargo.toml
 
 [deploy]
-# Cargo builds binaries in target/release/ - specify full path
+# Create database directory before starting
+preDeployCommand = "mkdir -p /app/db"
 startCommand = "./target/release/nostr-rs-relay"
 healthcheckPath = "/"
 healthcheckTimeout = 300
