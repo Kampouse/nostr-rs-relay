@@ -1048,9 +1048,9 @@ fn convert_to_msg(msg: &str, max_bytes: Option<usize>) -> Result<NostrMessage> {
 /// Turn a string into a NOTICE message ready to send over a `WebSocket`
 fn make_notice_message(notice: &Notice) -> Message {
     let json = match notice {
-        Notice::Message(ref msg) => json!(["NOTICE", msg]),
-        Notice::EventResult(ref res) => json!(["OK", res.id, res.status.to_bool(), res.msg]),
-        Notice::AuthChallenge(ref challenge) => json!(["AUTH", challenge]),
+        Notice::Message(msg) => json!(["NOTICE", msg]),
+        Notice::EventResult(res) => json!(["OK", res.id, res.status.to_bool(), res.msg]),
+        Notice::AuthChallenge(challenge) => json!(["AUTH", challenge]),
     };
 
     Message::text(json.to_string())

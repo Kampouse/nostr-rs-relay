@@ -8,7 +8,6 @@ use serde::{Deserialize, Serialize};
 use serde_json::Value;
 
 use async_trait::async_trait;
-use rand::Rng;
 
 use std::str::FromStr;
 use url::Url;
@@ -90,7 +89,7 @@ impl LNBitsPaymentProcessor {
 impl PaymentProcessor for LNBitsPaymentProcessor {
     /// Calls LNBits api to ger new invoice
     async fn get_invoice(&self, key: &Keys, amount: u64) -> Result<InvoiceInfo, Error> {
-        let random_number: u16 = rand::thread_rng().gen();
+        let random_number: u16 = rand::random();
         let memo = format!("{}: {}", random_number, key.public_key());
 
         let callback_url = Url::parse(
