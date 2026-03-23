@@ -1,0 +1,1 @@
+web: ./nostr-rs-relay
