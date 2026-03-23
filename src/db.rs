@@ -7,6 +7,7 @@ use crate::notice::Notice;
 use crate::payment::PaymentMessage;
 use crate::repo::postgres::{PostgresPool, PostgresRepo};
 use crate::repo::sqlite::SqliteRepo;
+use crate::repo::libsql::LibsqlRepo;
 use crate::repo::NostrRepo;
 use crate::server::NostrMetrics;
 use governor::clock::Clock;
@@ -47,6 +48,7 @@ pub async fn build_repo(settings: &Settings, metrics: NostrMetrics) -> Arc<dyn N
     match settings.database.engine.as_str() {
         "sqlite" => Arc::new(build_sqlite_pool(settings, metrics).await),
         "postgres" => Arc::new(build_postgres_pool(settings, metrics).await),
+        "libsql" => Arc::new(build_libsql_repo(settings, metrics).await),
         _ => panic!("Unknown database engine"),
     }
 }
@@ -95,6 +97,13 @@ async fn build_postgres_pool(settings: &Settings, metrics: NostrMetrics) -> Post
     info!("Postgres migration completed, at v{}", version);
     // startup scheduled tasks
     repo.start().await.ok();
+    repo
+}
+
+async fn build_libsql_repo(settings: &Settings, metrics: NostrMetrics) -> LibsqlRepo {
+    let repo = LibsqlRepo::new(settings, metrics).await;
+    repo.start().await.ok();
+    repo.migrate_up().await.ok();
     repo
 }
 

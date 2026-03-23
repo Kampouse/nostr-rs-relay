@@ -1,9 +1,33 @@
+# Railway configuration for nostr-rs-relay using Railpack
+
 [build]
-builder = "DOCKERFILE"
-dockerfilePath = "Dockerfile"
+# Railpack will automatically detect and build the Rust project
+# We just need to ensure protobuf-compiler is available
+buildCommand = "apt-get update && apt-get install -y protobuf-compiler && cargo build --release"
+
+[build.env]
+CARGO_LOG = "info"
+RUST_VERSION = "1.88"
 
 [deploy]
-startCommand = "RUST_LOG=info,nostr_rs_relay=info ./nostr-rs-relay"
+# The binary will be at ./target/release/nostr-rs-relay
+# Railpack copies the repo to /app, so we need to use the full path
+startCommand = "RUST_LOG=info,nostr_rs_relay=debug /app/target/release/nostr-rs-relay --config /app/config.railway.toml --db /app/db"
 healthcheckPath = "/"
 healthcheckTimeout = 300
 restartPolicyType = "on_failure"
+
+[variables]
+# Database configuration
+DATABASE_ENGINE = "sqlite"
+DATABASE_CONNECTION = ""
+DATABASE_CONNECTION_WRITE = ""
+
+# Server configuration
+PORT = "8080"
+
+[[services]]
+# Expose the relay on port 8080
+[[services.ports]]
+port = 8080
+type = "HTTP"

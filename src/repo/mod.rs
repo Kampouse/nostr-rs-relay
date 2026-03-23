@@ -13,6 +13,8 @@ pub mod postgres;
 pub mod postgres_migration;
 pub mod sqlite;
 pub mod sqlite_migration;
+pub mod libsql;
+pub mod libsql_migration;
 
 #[async_trait]
 pub trait NostrRepo: Send + Sync {

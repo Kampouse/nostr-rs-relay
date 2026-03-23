@@ -42,6 +42,8 @@ pub enum Error {
     CommandUnknownError,
     #[error("SQL error")]
     SqlError(rusqlite::Error),
+    #[error("libSQL error")]
+    LibsqlError(libsql::Error),
     #[error("Config error : {0}")]
     ConfigError(config::ConfigError),
     #[error("Data directory does not exist")]
@@ -121,6 +123,13 @@ impl From<rusqlite::Error> for Error {
     /// Wrap SQL error
     fn from(r: rusqlite::Error) -> Self {
         Error::SqlError(r)
+    }
+}
+
+impl From<libsql::Error> for Error {
+    /// Wrap libSQL error
+    fn from(r: libsql::Error) -> Self {
+        Error::LibsqlError(r)
     }
 }
 

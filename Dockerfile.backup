@@ -4,22 +4,19 @@ RUN apt-get update \
     && apt-get install -y cmake protobuf-compiler \
     && rm -rf /var/lib/apt/lists/*
 RUN USER=root cargo install cargo-auditable
-RUN USER=root cargo new --bin nostr-rs-relay
-WORKDIR ./nostr-rs-relay
+
+# Create project directory
+WORKDIR /usr/src/nostr-rs-relay
+
+# Copy all source files
 COPY ./Cargo.toml ./Cargo.toml
 COPY ./Cargo.lock ./Cargo.lock
-# build dependencies only (caching)
-RUN cargo auditable build --release --locked
-# get rid of starter project code
-RUN rm src/*.rs
-
-# copy project source code
 COPY ./src ./src
 COPY ./proto ./proto
 COPY ./build.rs ./build.rs
 
-# build auditable release using locked deps
-RUN rm ./target/release/deps/nostr*relay*
+# Build auditable release using locked deps
+RUN cargo auditable install cargo-auditable
 RUN cargo auditable build --release --locked
 
 FROM docker.io/library/debian:bookworm-slim
