@@ -2,6 +2,8 @@
 # Railway auto-detects Rust projects from Cargo.toml
 
 [deploy]
+# Cargo builds binaries in target/release/ - specify full path
+startCommand = "./target/release/nostr-rs-relay"
 healthcheckPath = "/"
 healthcheckTimeout = 300
 restartPolicyType = "on_failure"
