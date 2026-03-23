@@ -1,10 +1,9 @@
 [build]
-builder = "dockerfile"
+builder = "DOCKERFILE"
+dockerfilePath = "Dockerfile"
 
 [deploy]
 startCommand = "RUST_LOG=info,nostr_rs_relay=info ./nostr-rs-relay"
 healthcheckPath = "/"
 healthcheckTimeout = 300
 restartPolicyType = "on_failure"
-
-[[services]]
