@@ -137,8 +137,17 @@ impl Rows {
 impl LibsqlRepo {
     /// Create a new libSQL repository
     pub async fn new(settings: &Settings, metrics: NostrMetrics) -> Self {
-        let url = settings.database.connection.clone();
-        let auth_token = settings.database.connection_write.clone(); // reuse for auth token
+        // Prefer Railway's SQLD_PRIVATE_URL, fallback to config
+        let url = std::env::var("SQLD_PRIVATE_URL")
+            .ok()
+            .filter(|s| !s.is_empty())
+            .unwrap_or_else(|| settings.database.connection.clone());
+
+        // Prefer Railway's SQLD_PRIVATE_TOKEN, fallback to config
+        let auth_token = std::env::var("SQLD_PRIVATE_TOKEN")
+            .ok()
+            .filter(|s| !s.is_empty())
+            .or_else(|| settings.database.connection_write.clone());
 
         info!("Connecting to libSQL database at: {}", url);
 
