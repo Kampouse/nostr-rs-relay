@@ -7,3 +7,7 @@ startCommand = "./target/release/nostr-rs-relay"
 healthcheckPath = "/"
 healthcheckTimeout = 300
 restartPolicyType = "on_failure"
+
+[variables]
+# Ensure port matches config.toml
+PORT = "8080"
